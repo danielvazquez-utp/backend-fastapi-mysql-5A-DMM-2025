@@ -8,4 +8,4 @@ class User(BaseModel):
     nickname: str
     password: str
     profile: int
-    state: bool
+    status: bool
