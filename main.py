@@ -70,3 +70,53 @@ def getUserById( id ):
         return {"status":"ok", "message": "Usuario recuperado", "data": usuario}
     else:
         return {"status":"error", "message": "Usuario no enocntrado"}
+
+# Crear un endpoint que retorne un usuario verificando su usuario y contraseña
+
+# Endpoint que crea un usuario
+@app.post("/users")
+def createUser( user:User ):
+    query = "INSERT INTO usuarios (`name`, `lastname`, `nickname`, `password`, `profile`, `status`) VALUES ('{}', '{}', '{}', '{}', '{}', {})".format( user.name, user.lastname, user.nickname, user.password, user.profile, user.status )
+    print(query)
+    try :
+        cursor = db.cursor()
+        cursor.execute(query)
+        db.commit()
+        return {
+            "status": "ok",
+            "message": "Usuario agregado con éxito",
+        }
+    except:
+        return {"status":"error", "message": "Usuario no fue agregado"}
+
+# Endoint para modifir un usuario
+@app.put("/users")
+def updateUser( user:User ):
+    query = "UPDATE usuarios SET `name`='{}', `lastname`='{}', `nickname`='{}', `password`='{}', `profile`={}, `status`={} WHERE `id`={} ".format(  user.name, user.lastname, user.nickname, user.password, user.profile, user.status, user.id)
+    print(query)
+    try:
+        cursor = db.cursor()
+        cursor.execute(query)
+        db.commit()
+        return {
+            "status": "ok",
+            "message": "Usuario modificado con éxito",
+        }
+    except:
+        return {"status":"error", "message": "Usuario no fue modificado"}
+
+# Endpoint para eliminar un usuario
+@app.delete("/users/{id}")
+def delUser( id ):
+    query = "DELETE FROM usuarios WHERE `id`={}".format( id )
+    print( query )
+    try:
+        cursor = db.cursor()
+        cursor.execute(query)
+        db.commit()
+        return {
+            "status": "ok",
+            "message": "Usuario eliminado con éxito",
+        }
+    except:
+        return {"status":"error", "message": "Usuario no fue eliminado"}
